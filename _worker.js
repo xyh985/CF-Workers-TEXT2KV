@@ -17,7 +17,7 @@ export default {
             }
 
             let fileName = url.pathname.startsWith('/') ? url.pathname.substring(1) : url.pathname;
-            fileName = fileName.toLowerCase(); // 将文件名转换为小写
+            //fileName = fileName.toLowerCase(); // 将文件名转换为小写
 
             switch (fileName) {
                 case "config":
