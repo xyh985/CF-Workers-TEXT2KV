@@ -18,7 +18,6 @@ export default {
 
                     if (token !== mytoken) {
                         return createResponse(`已保存，收到 token: ${token}`);
-                        return createResponse("token 有误", 403);
                     }
 
                     if (!filename || !b64) {
