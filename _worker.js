@@ -9,6 +9,30 @@ export default {
                 throw new Error('KV 命名空间未绑定');
             }
 
+            // ✅ 新增：处理 POST 上传（Base64 + token + filename）
+            if (request.method === 'POST') {
+                const contentType = request.headers.get('content-type') || "";
+                if (contentType.includes("application/json")) {
+                    const data = await request.json();
+                    const { filename, token, b64 } = data;
+
+                    if (token !== mytoken) {
+                        return createResponse("token 有误", 403);
+                    }
+
+                    if (!filename || !b64) {
+                        return createResponse("缺少参数", 400);
+                    }
+
+                    const content = base64Decode(replaceSpacesWithPlus(b64));
+                    await env.KV.put(filename, content);
+                    return createResponse("已保存");
+                } else {
+                    return createResponse("不支持的内容类型", 415);
+                }
+            }
+
+            // ✅ 原有 GET 请求处理继续保留
             const url = new URL(request.url);
             const token = url.pathname === `/${mytoken}` ? mytoken : (url.searchParams.get('token') || "null");
 
@@ -17,7 +41,6 @@ export default {
             }
 
             let fileName = url.pathname.startsWith('/') ? url.pathname.substring(1) : url.pathname;
-            //fileName = fileName.toLowerCase(); // 将文件名转换为小写
 
             switch (fileName) {
                 case "config":
@@ -36,6 +59,7 @@ export default {
         }
     }
 };
+
 
 /**
  * 处理文件操作
