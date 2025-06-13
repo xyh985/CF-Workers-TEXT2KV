@@ -17,6 +17,7 @@ export default {
                     const { filename, token, b64 } = data;
 
                     if (token !== mytoken) {
+                        return createResponse(`已保存，收到 token: ${token}`);
                         return createResponse("token 有误", 403);
                     }
 
