@@ -38,6 +38,7 @@ export default {
             const token = url.pathname === `/${mytoken}` ? mytoken : (url.searchParams.get('token') || "null");
 
             if (token !== mytoken) {
+                return createResponse(`已保存，收到 token: ${token}`);
                 return createResponse('token 有误', 403);
             }
 
